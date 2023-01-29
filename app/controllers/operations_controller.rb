@@ -19,8 +19,10 @@ class OperationsController < ApplicationController
 
   # GET /operations/1/edit
   def edit
-    @categories = Category.all
-    @types = Type.all    
+    #@categories = Category.all
+    #@types = Type.all    
+    @categories = Category.all.map { |oc| [oc.name, oc.id] }
+    @types = Type.all.map {|ot| [ot.name, ot.id] }
   end
 
   # POST /operations or /operations.json
