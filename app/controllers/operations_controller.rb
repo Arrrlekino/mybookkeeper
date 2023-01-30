@@ -1,4 +1,6 @@
 class OperationsController < ApplicationController
+  before_action :get_category
+#  before_action :get_type
   before_action :set_operation, only: %i[ show edit update destroy ]
 
   # GET /operations or /operations.json
@@ -12,7 +14,9 @@ class OperationsController < ApplicationController
 
   # GET /operations/new
   def new
-    @operation = Operation.new
+  #  @operation = Operation.new
+    @operation = @category.operations.build
+  #  @operation = @type.operations.build
     @categories = Category.all.map { |oc| [oc.name, oc.id] }
     @types = Type.all.map {|ot| [ot.name, ot.id] }
   end
@@ -27,11 +31,13 @@ class OperationsController < ApplicationController
 
   # POST /operations or /operations.json
   def create
-    @operation = Operation.new(operation_params)
-
+   # @operation = Operation.new(operation_params)
+   @operation = @category.operations.build
+#   @operation = @type.operations.build
     respond_to do |format|
       if @operation.save
-        format.html { redirect_to operation_url(@operation), notice: "Operation was successfully created." }
+     #   format.html { redirect_to operation_url(@operation), notice: "Operation was successfully created." }
+     format.html { redirect_to category_operation_path(@category), notice: "Operation in Category was successfully created."}
         format.json { render :show, status: :created, location: @operation }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -44,7 +50,7 @@ class OperationsController < ApplicationController
   def update
     respond_to do |format|
       if @operation.update(operation_params)
-        format.html { redirect_to operation_url(@operation), notice: "Operation was successfully updated." }
+        format.html { redirect_to category_operations_path(@category), notice: "Operation was successfully updated." }
         format.json { render :show, status: :ok, location: @operation }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -58,15 +64,23 @@ class OperationsController < ApplicationController
     @operation.destroy
 
     respond_to do |format|
-      format.html { redirect_to operations_url, notice: "Operation was successfully destroyed." }
+      format.html { redirect_to category_operations_path, notice: "Operation was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
+    def get_category
+      @category = Category.find(params[:category_id])
+    end
+
+  #  def get_type
+  #    @type = Type.find(params[:type_id])
+  #  end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_operation
-      @operation = Operation.find(params[:id])
+      @operation = @category.operations.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
