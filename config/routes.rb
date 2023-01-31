@@ -10,9 +10,9 @@ Rails.application.routes.draw do
 #  resources :types do
 #    resources :operations
 #  end
-resources :categories do
-  resources :operations
-end
+#resources :categories do
+#  resources :operations
+#end
   resources :operations
   resources :types
   resources :categories
